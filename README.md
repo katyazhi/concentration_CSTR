@@ -3,7 +3,7 @@
 ## Background
 [Continuous stirred-tank reactors (CSTR)](https://en.wikipedia.org/wiki/Continuous_stirred-tank_reactor) are common tools used in System Chemistry and Origins of Life research. A common laboratory setup includes a chamber with input(s), output, and a stirrer. Reagents are supplied by tubing from syringes, and the concentrations of reagents are controlled by adjusting the flow rate from each syringe. By analyzing the solution from the output, one can draw conclusions about the process happening inside the reactor.
 
-![Example of CSTR for System Chemistry research from [*S.Semenov et al., Nature, 2016*](https://www.nature.com/articles/nature19776)](https://www.researchgate.net/profile/Jerome-Fox/publication/308706927/figure/fig2/AS:411560389431300@1475135051659/Schematic-representation-of-the-CSTR-experimental-set-up-In-this-set-up-syringe-pumps.png)
+![Example of CSTR for System Chemistry research from [*S.Semenov et al., Nature, 2016*](https://www.nature.com/articles/nature19776)](https://scx2.b-cdn.net/gfx/news/2016/57ed138dcf1f6.jpg)
 
 However, in some cases with complex systems, the concentrations of reagents (flow rates) need to be changed during the experiment. This program calculates the actual concentrations of reagents over time inside the multi-input CSTR, taking into account:
 * CSTR parameters (size)
