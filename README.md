@@ -1,4 +1,4 @@
-### Concentration-Time Graphs for multi-inputs CSTR
+# Concentration-Time Graphs for multi-inputs CSTR
 
 ## Background
 [Continuous stirred-tank reactors (CSTR)](https://en.wikipedia.org/wiki/Continuous_stirred-tank_reactor) are common tools used in System Chemistry and Origins of Life research. A common laboratory setup includes a chamber with input(s), output, and a stirrer. Reagents are supplied by tubing from syringes, and the concentrations of reagents are controlled by adjusting the flow rate from each syringe. By analyzing the solution from the output, one can draw conclusions about the process happening inside the reactor.
