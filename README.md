@@ -14,10 +14,12 @@ However, in some cases with complex systems, the concentrations of reagents (flo
 
 ## Installation
 Download files from this repository to your computer and install required Python packages with the command:
+
 `pip install -r requirements.txt`
 
 ## Usage
 To run the programm use command:
+
 `python CSTR.py`
 
 The program has a user-friendly graphical interface. Fill the boxes in the opened window with all the parameters needed for the calculations:
@@ -36,6 +38,7 @@ As the output, you will receive an Excel file with the concentration-time data a
 
 ## Tests
 To ensure that the program works correctly on your computer, you may run tests with the command:
+
 `pytest test_CSTR.py`
 
 This project was originally implemented as part of the [Python programming course](https://github.com/szabgab/wis-python-course-2024-04) at the [Weizmann Institute of Science](https://www.weizmann.ac.il) taught by [Gabor Szabo](https://szabgab.com/).
