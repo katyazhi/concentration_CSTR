@@ -8,7 +8,6 @@ Example of CSTR for System Chemistry research from [*S.Semenov et al., Nature, 2
 
 However, in some cases with complex systems, the concentrations of reagents (flow rates) need to be changed during the experiment. This program calculates the actual concentrations of reagents over time inside the multi-input CSTR, taking into account:
 * CSTR parameters (size)
-* Lag time caused by tubing
 * Starting flow rates and concentrations of reagents
 * Changes in flow rates during the experiments 
 
@@ -19,13 +18,12 @@ Download files from this repository to your computer and install required Python
 
 ## Usage
 To run the programm use command:
-`python CSTR_graph.py`
+`python CSTR.py`
 
 The program has a user-friendly graphical interface. Fill the boxes in the opened window with all the parameters needed for the calculations:
 * CSTR size
 * Number of syringes
-* Tubing length and diameter for each syringe
-* Names of reagents in each syringe
+* Names of reagents 
 * Concentrations of reagents in each syringe
 * Starting flow rates for each syringe
 * Changes in flow rates made during the experiment
@@ -33,11 +31,11 @@ The program has a user-friendly graphical interface. Fill the boxes in the opene
 * Total time of the experiment
 * Name of the experiment 
 
-To start calculations, use the "Submit" button.
+To start calculations, use the "Start calculations" button.
 As the output, you will receive an Excel file with the concentration-time data as well as a graph for this data.
 
 ## Tests
 To ensure that the program works correctly on your computer, you may run tests with the command:
-`pytest`
+`pytest test_CSTR.py`
 
 This project was originally implemented as part of the [Python programming course](https://github.com/szabgab/wis-python-course-2024-04) at the [Weizmann Institute of Science](https://www.weizmann.ac.il) taught by [Gabor Szabo](https://szabgab.com/).
