@@ -70,8 +70,8 @@ def sheets_creator(workbook, first_sheet, second_sheet, third_sheet, unique_reag
                 first_syringe = second_sheet.cell(row=row, column=2).value
                 data_to_copy = int(first_syringe) + 1
                 copypasting(first_sheet, second_sheet, third_sheet, new_sheet, data_to_copy, row)
-                copypasting_add(first_sheet, second_sheet, third_sheet, new_sheet, reagent, row)
-                calc_combo(new_sheet)
+                copypasting_add(second_sheet, third_sheet, new_sheet, reagent, row)
+                calc_combo_for_two(new_sheet)
                 format_cells(new_sheet)
 
 def copypasting(first_sheet, second_sheet, third_sheet, new_sheet, data_to_copy, row):
@@ -91,7 +91,7 @@ def copypasting(first_sheet, second_sheet, third_sheet, new_sheet, data_to_copy,
     for col in range(1, 3):
         new_sheet.cell(row=2, column=col+6, value=first_sheet.cell(row=1, column=col).value) 
 
-def copypasting_add(first_sheet, second_sheet, third_sheet, new_sheet, reagent, row):
+def copypasting_add(second_sheet, third_sheet, new_sheet, reagent, row):
      
      for duplicate_row in range(2, second_sheet.max_row + 1):
         if second_sheet.cell(row=duplicate_row, column=1).value == reagent and duplicate_row != row:
@@ -103,6 +103,86 @@ def copypasting_add(first_sheet, second_sheet, third_sheet, new_sheet, reagent, 
             for r in range(1, third_sheet.max_row - 1):
                 new_sheet.cell(row=r + 4, column=3, value=third_sheet.cell(row=r, column=data_2_to_copy).value)
                 new_sheet.cell(row=r + 4, column=4, value=third_sheet.cell(row=r, column=third_sheet.max_column).value)
+
+def values_in_memory(sheet):
+
+    times = []
+    substance_flows = []
+    total_flows = []
+    tot_time = sheet['H1'].value
+
+    for r in range(6, sheet.max_row+1):
+        time = float(sheet.cell(row=r, column=1).value)
+        s_f = float(sheet.cell(row=r, column=2).value)/60
+        t_f = float(sheet.cell(row=r, column=3).value)/60
+        times.append(time)
+        substance_flows.append(s_f)
+        total_flows.append(t_f)
+
+    return  times, substance_flows, total_flows, tot_time
+
+def values_in_memory_for_two(sheet):
+
+    times = []
+    substance_flows_1 = []
+    substance_flows_2 = []
+    total_flows = []
+    tot_time = sheet['H1'].value
+
+    for r in range(6, sheet.max_row+1):
+        time = float(sheet.cell(row=r, column=1).value)
+        s_f_1 = float(sheet.cell(row=r, column=2).value)/60
+        s_f_2 = float(sheet.cell(row=r, column=3).value)/60
+        t_f = float(sheet.cell(row=r, column=4).value)/60
+        times.append(time)
+        substance_flows_1.append(s_f_1)
+        substance_flows_2.append(s_f_2)
+        total_flows.append(t_f)
+
+    return  times, substance_flows_1, substance_flows_2, total_flows, tot_time
+
+def input_concentration_over_time(times, substance_flows, total_flows, tot_time, initial_concentration):
+
+    concentration_table = []
+    current_time=0
+
+    for i in range(len(times)):
+        if i < len(times) - 1:
+            next_time = times[i + 1]
+        else:
+            next_time = tot_time
+        
+        while current_time < next_time:
+            current_concentration = initial_concentration * (substance_flows[i] / total_flows[i])
+            concentration_table .append(current_concentration)
+            current_time += 1
+       
+    return concentration_table
+
+def input_conc_for_two(tot_time, concentration_table_1, concentration_table_2):
+    concentration_table_tot = []
+    for i in range(0, tot_time):
+        conc = float(concentration_table_1[i]) + float(concentration_table_2[i])
+        concentration_table_tot.append(conc)
+
+    return concentration_table_tot
+
+def flow_rates(times, total_flows, tot_time):
+
+    tot_flows_table = []
+    current_time=0
+    for i in range(len(times)):
+        if i < len(times) - 1:
+            next_time = times[i + 1]
+        else:
+            next_time = tot_time
+        
+        while current_time < next_time:
+            current_flow=total_flows[i]
+            tot_flows_table.append(current_flow)
+            current_time += 1
+
+    return tot_flows_table
 
 def add_time_concentration_table(sheet):
 
@@ -127,82 +207,20 @@ def starting_conc_for_two_syr(sheet):
     tot_flow=float(sheet.cell(row=6, column=4).value)
     conc_in_syr_1=float(sheet.cell(row=2, column=3).value)
     conc_in_syr_2=float(sheet.cell(row=3, column=3).value)
-    starting_conc=(flow_1*conc_in_syr_1 + flow_2*conc_in_syr_2)/tot_flow
+    sum=(flow_1*conc_in_syr_1)+(flow_2*conc_in_syr_2)
+    starting_conc=sum/tot_flow
     sheet.cell(row=2, column=11, value=starting_conc)
 
-def values_in_memory(sheet):
+def calculate_table(sheet, tot_flows_table, tot_time):
 
-    times = []
-    substance_flows = []
-    total_flows = []
-    tot_time = sheet['H1'].value
+   volume = sheet['H2'].value
 
-    for r in range(6, sheet.max_row+1):
-        time = float(sheet.cell(row=r, column=1).value)
-        s_f = float(sheet.cell(row=r, column=2).value)/60
-        t_f = float(sheet.cell(row=r, column=3).value)/60
-        times.append(time)
-        substance_flows.append(s_f)
-        total_flows.append(t_f)
-
-    return  times, substance_flows, total_flows, tot_time
-
-
-def input_concentration_over_time(times, substance_flows, total_flows, tot_time, initial_concentration):
-
-    concentration_table = []
-    current_time=0
-
-    for i in range(len(times)):
-        if i < len(times) - 1:
-            next_time = times[i + 1]
-        else:
-            next_time = tot_time
-        
-        while current_time < next_time:
-            current_concentration = initial_concentration * (substance_flows[i] / total_flows[i])
-            concentration_table .append(current_concentration)
-            current_time += 1
-       
-    return concentration_table
-
-
-def flow_rates(times, total_flows, tot_time):
-
-    tot_flows_table = []
-    current_time=0
-    for i in range(len(times)):
-        if i < len(times) - 1:
-            next_time = times[i + 1]
-        else:
-            next_time = tot_time
-        
-        while current_time < next_time:
-            current_flow=total_flows[i]
-            tot_flows_table.append(current_flow)
-            current_time += 1
-
-    return tot_flows_table
-
-def values_in_memory_for_two(sheet):
-
-    times = []
-    substance_flows_1 = []
-    substance_flows_2 = []
-    total_flows = []
-    tot_time = sheet['H1'].value
-
-    for r in range(6, sheet.max_row+1):
-        time = float(sheet.cell(row=r, column=1).value)
-        s_f_1 = float(sheet.cell(row=r, column=2).value)/60
-        s_f_2 = float(sheet.cell(row=r, column=3).value)/60
-        t_f = float(sheet.cell(row=r, column=4).value)/60
-        times.append(time)
-        substance_flows_1.append(s_f_1)
-        substance_flows_2.append(s_f_2)
-        total_flows.append(t_f)
-
-    return  times, substance_flows_1, substance_flows_2, total_flows, tot_time
+   for row in range(3, tot_time+2):
+        for flow_rate in tot_flows_table:
+            previous_concentration = sheet.cell(row=row-1, column=11).value 
+            flow_concentration = sheet.cell(row=row, column=12).value
+            current_concentration = flow_concentration + (previous_concentration - flow_concentration) * math.exp(-flow_rate / volume)
+            sheet.cell(row=row, column=11, value=current_concentration)
 
 def create_scatter_plot(sheet):
 
@@ -220,27 +238,16 @@ def create_scatter_plot(sheet):
 
     sheet.add_chart(chart, "N1")  
 
-def calculate_table(sheet, tot_flows_table, tot_time):
-
-   volume = sheet['H2'].value
-
-   for row in range(3, tot_time+2):
-        for flow_rate in tot_flows_table:
-            previous_concentration = sheet.cell(row=row-1, column=11).value 
-            flow_concentration = sheet.cell(row=row, column=12).value
-            current_concentration = flow_concentration + (previous_concentration - flow_concentration) * math.exp(-flow_rate / volume)
-            sheet.cell(row=row, column=11, value=current_concentration)
-
 def calc_combo(sheet):
 
     times, substance_flows, total_flows, tot_time = values_in_memory(sheet)
-    tube_volume = sheet['D2'].value
     initial_concentration = sheet['C2'].value
     concentration_table = input_concentration_over_time(times, substance_flows, total_flows, tot_time, initial_concentration)
     tot_flows_table = flow_rates(times, total_flows, tot_time)
     add_time_concentration_table(sheet)
     starting_conc(sheet)
-
+    
+    sheet.cell(row=1, column=13).value = "Total flow (microliteres/min)"
     for minute, tot_flow in enumerate(tot_flows_table):
         sheet.cell(row=minute + 2, column=13).value = tot_flow
     sheet.cell(row=1, column=12).value = "Input concentration(mM)"
@@ -249,34 +256,25 @@ def calc_combo(sheet):
     calculate_table(sheet, tot_flows_table, tot_time)
     create_scatter_plot(sheet)
 
-def flow_conc_for_two(tot_time, concentration_table_1, concentration_table_2):
-    concentration_table_tot = []
-    for i in range(0, tot_time-1):
-        conc = float(concentration_table_1[i]) + float(concentration_table_2[i])
-        concentration_table_tot.append(conc)
-
-    return concentration_table_tot
-
-
-def calc_combo_for_dublicates(sheet):
+def calc_combo_for_two(sheet):
 
     times, substance_flows_1, substance_flows_2, total_flows, tot_time = values_in_memory_for_two(sheet)
-    initial_concentration = sheet['C2'].value
-    concentration_table_1 = input_concentration_over_time(times, substance_flows_1, total_flows, tot_time, initial_concentration)
-    initial_concentration = sheet['C3'].value
-    concentration_table_2 = input_concentration_over_time(times, substance_flows_2, total_flows, tot_time, initial_concentration)
-    concentration_table_total = flow_conc_for_two(tot_time, concentration_table_1, concentration_table_2)
+    initial_concentration_1 = sheet['C2'].value
+    concentration_table_1 = input_concentration_over_time(times, substance_flows_1, total_flows, tot_time, initial_concentration_1)
+    initial_concentration_2 = sheet['C3'].value
+    concentration_table_2 = input_concentration_over_time(times, substance_flows_2, total_flows, tot_time, initial_concentration_2)
+    concentration_table_total = input_conc_for_two(tot_time, concentration_table_1, concentration_table_2)
     tot_flows_table = flow_rates(times, total_flows, tot_time)
     add_time_concentration_table(sheet)
     starting_conc_for_two_syr(sheet)
-
+    
+    sheet.cell(row=1, column=13).value = "Total flow (microliteres/min)"
     for minute, tot_flow in enumerate(tot_flows_table):
         sheet.cell(row=minute + 2, column=13).value = tot_flow
+    
     sheet.cell(row=1, column=12).value = "Input concentration(mM)"
-
     for minute, concentration in enumerate(concentration_table_total):
         sheet.cell(row=minute + 2, column=12).value = concentration
 
     calculate_table(sheet, tot_flows_table, tot_time)
     create_scatter_plot(sheet)   
-

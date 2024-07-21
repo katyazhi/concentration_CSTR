@@ -49,60 +49,57 @@ class ExperimentApp(tk.Tk):
         self.num_syringes_label.grid(row=2, column=0)
         self.num_syringes_combobox.grid(row=2, column=1)
 
-        save_button = tk.Button(self.setup_tab, text="Save", command=self.save_CSTR, bg = '#c7bffb', fg = 'black', font = ("Helvetica", 12))
-        save_button.grid(row=3, columnspan=2)
+        create_button = tk.Button(self.setup_tab, text="Create experiment", command=self.create_experiment, bg = '#c7bffb', fg = 'black', font = ("Helvetica", 12))
+        create_button.grid(row=3, columnspan=2)
         
 
         # Reagents Page
-        self.num_reagents_label = tk.Label(self.reagents_tab, text="Number of reagents:", font=label_font, bg='#e0dcfd')
+        self.num_reagents_label = tk.Label(self.reagents_tab, text="Number of rows in reagents table:", font=label_font, bg='#e0dcfd')
         self.num_reagents_combobox = ttk.Combobox(self.reagents_tab, values=list(range(1, 11)), font=entry_font)
         self.num_reagents_label.grid(row=0, column=0)
         self.num_reagents_combobox.grid(row=0, column=1)
 
-        self.num_add_reagents_label = tk.Label(self.reagents_tab, text="Number of reagents with two different concentrations:", font=label_font, bg='#e0dcfd')
-        self.num_add_reagents_combobox = ttk.Combobox(self.reagents_tab, values=list(range(0, 10)), font=entry_font)
-        self.num_add_reagents_label.grid(row=1, column=0)
-        self.num_add_reagents_combobox.grid(row=1, column=1)
-
         self.add_boxes_button = tk.Button(self.reagents_tab, text="Add reagents list", command=self.add_reagent_names, **button_style)
-        self.add_boxes_button.grid(row=2, columnspan=2)
+        self.add_boxes_button.grid(row=1, columnspan=2)
 
         # Experiment Page
+
         self.flows = tk.Label(self.experiment_tab, text="Enter flow rates (microliters in hour) and time (min) when they were changed", font=label_font, bg='#e0dcfd')
-        self.flows.grid(row=0)
+        self.flows.grid(row=0, columnspan=10, sticky="ew")
 
         self.total_time = tk.Label(self.experiment_tab, text="Total time of experiment (min):", font=label_font, bg='#e0dcfd')
-        self.total_time_entry = tk.Entry(self.experiment_tab, font=entry_font)
-        self.total_time.grid(row=1, column=0)
-        self.total_time_entry.grid(row=1, column=1)
+        self.total_time_entry = tk.Entry(self.experiment_tab, font=entry_font, width=7)
+        self.total_time.grid(row=1, columnspan=3)
+        self.total_time_entry.grid(row=1, column=4)
 
-        add_rows_button = tk.Button(self.experiment_tab, text="Add change", command=self.add_rows, **button_style)
+        add_rows_button = tk.Button(self.experiment_tab, text="Add change", command=self.add_rows, width=9, **button_style)
         add_rows_button.grid(row=2, column=0)
-        save_changes_button = tk.Button(self.experiment_tab, text="Save changes", command=self.save_changes, **button_style)
-        save_changes_button.grid(row=2, column=1)
         self.num_rows = 4
 
         # Run Page
         self.message = tk.Label(self.run_tab, text="Make sure that you filled all the gaps with the correct data.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=1)
 
+        save_button = tk.Button(self.run_tab, text="Save data", command=self.save_CSTR, **button_style)
+        save_button.grid(row=3)
+
         run_button = tk.Button(self.run_tab, text="Start calculations", command=self.calc, **button_style)
-        run_button.grid(row=3)
+        run_button.grid(row=5)
         
         # Help Page
-        self.message = tk.Label(self.help_tab, text="1. Fill out the tabs sequentially, then on the run tab click the button to start calculations.", font=label_font, bg='#e0dcfd')
+        self.message = tk.Label(self.help_tab, text="1. Fill out the first tab, then click the button to create experiment before going to next tabs.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=0)
-        self.message = tk.Label(self.help_tab, text="2. You must click the save button after filling out each tab.", font=label_font, bg='#e0dcfd')
+        self.message = tk.Label(self.help_tab, text="2. Click the save button on run tab after finishing with all the tabs to create an excel file.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=1)
-        self.message = tk.Label(self.help_tab, text="3. Click the buttons to add reagents only after you have filled out the rest of the information on the tab.", font=label_font, bg='#e0dcfd')
+        self.message = tk.Label(self.help_tab, text="3. After saving the data you can start calculations by clicking on the button on the run tab.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=2)
-        self.message = tk.Label(self.help_tab, text="4. If you are dispensing one reagent from two syringes, enter it into the reagent table twice.", font=label_font, bg='#e0dcfd')
+        self.message = tk.Label(self.help_tab, text="4. To add list of reagent you need a row for each reagent.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=3)
-        self.message = tk.Label(self.help_tab, text="5. Click the add change button to add one new row to the table on the third tab. The number of rows is not limited.", font=label_font, bg='#e0dcfd')
+        self.message = tk.Label(self.help_tab, text="5. If you are dispensing one reagent from two syringes fill out two rows for this reagent.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=4)
-        self.message = tk.Label(self.help_tab, text="6. After adding all changes in the experiment tab, click the save button.", font=label_font, bg='#e0dcfd')
+        self.message = tk.Label(self.help_tab, text="6. Click the add change button to add one new row to the table on the third tab. The number of rows is not limited.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=5)
-        self.message = tk.Label(self.help_tab, text= "7. Use a period as a fraction separator.", font=label_font, bg='#e0dcfd')
+        self.message = tk.Label(self.help_tab, text="7. Use a period as a fraction separator.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=6)
         self.message = tk.Label(self.help_tab, text="8. After saving, you can view the entered data in an Excel file.", font=label_font, bg='#e0dcfd')
         self.message.grid(row=7)
@@ -114,55 +111,20 @@ class ExperimentApp(tk.Tk):
 
     # GUI functions
 
-    def save_CSTR(self):
-        self.create_experiment()
-        workbook = openpyxl.Workbook()
-        worksheet = workbook.active
-        worksheet.title = "CSTR"
-        data = {'CSTR volume': [float(self.cstr_volume_entry.get())*1000]}
-        for key, value in data.items():
-            worksheet.append([key, *value])
-        filename = self.exp_name_entry.get() + '.xlsx'
-        workbook.save(filename)
-
-    def add_reagent_names(self):
-        num_rows = int(self.num_reagents_combobox.get()) + int(self.num_add_reagents_combobox.get())
-        num_syr = int(self.num_syringes_combobox.get())
-        label_reagent_name = tk.Label(self.reagents_tab, text=f"Reagent name", font=("Helvetica", 12), bg='#e0dcfd')
-        label_syringe_in = tk.Label(self.reagents_tab, text=f"Syringe", font=("Helvetica", 12), bg='#e0dcfd')
-        label_concentration = tk.Label(self.reagents_tab, text=f"Concentration (mM)", font=("Helvetica", 12), bg='#e0dcfd')
-        label_reagent_name.grid(row=2, column=1)
-        label_syringe_in.grid(row=2, column=2)
-        label_concentration.grid(row=2, column=3)
-
-        for i in range(num_rows):
-            label_reagent = tk.Label(self.reagents_tab, text=f"{i+1}", font=("Helvetica", 12), bg='#e0dcfd')
-            entry_reagent_name = tk.Entry(self.reagents_tab, font=("Helvetica", 12))
-            entry_syringe_in = ttk.Combobox(self.reagents_tab, values=list(range(1, int(num_syr)+1)), font=("Helvetica", 12))
-            entry_conc = tk.Entry(self.reagents_tab, font=("Helvetica", 12))
-            label_reagent.grid(row=i+3, column=0)
-            entry_reagent_name.grid(row=i+3, column=1)
-            entry_syringe_in.grid(row=i+3, column=2)
-            entry_conc.grid(row=i+3, column=3)
-
-        save_button = tk.Button(self.reagents_tab, text="Save reagents", command=self.save_reagents, bg = '#c7bffb', fg = 'black', font = ("Helvetica", 12))
-        save_button.grid(row=num_rows+4, columnspan=3)
-
-
     def create_experiment(self):
         num_entries = int(self.num_syringes_combobox.get())
-        label_time_of_change = tk.Label(self.experiment_tab, text="Time", font=("Helvetica", 12), bg='#e0dcfd')
+        label_time_of_change = tk.Label(self.experiment_tab, text="Time", font=("Helvetica", 12), bg='#e0dcfd', width=7)
         label_time_of_change.grid(row=3, column=0)
-        label_start = tk.Label(self.experiment_tab, text="0", font=("Helvetica", 12), bg='#e0dcfd')
+        label_start = tk.Label(self.experiment_tab, text="0", font=("Helvetica", 12), bg='#e0dcfd', width=7)
         label_start.grid(row=4, column=0)
         for i in range(num_entries):
-            label_syringe_flow = tk.Label(self.experiment_tab, text=f"Syringe {i+1}", font=("Helvetica", 12), bg='#e0dcfd')
-            entry_syringe_flow = tk.Entry(self.experiment_tab, font=("Helvetica", 12))
+            label_syringe_flow = tk.Label(self.experiment_tab, text=f"Syringe {i+1}", font=("Helvetica", 12), bg='#e0dcfd', width=8)
+            entry_syringe_flow = tk.Entry(self.experiment_tab, font=("Helvetica", 12), width=7)
             label_syringe_flow.grid(row=3, column=i+1)
             entry_syringe_flow.grid(row=4, column=i+1)
 
     def add_reagent_names(self):
-        num_rows = int(self.num_reagents_combobox.get()) + int(self.num_add_reagents_combobox.get())
+        num_rows = int(self.num_reagents_combobox.get())
         num_syr = int(self.num_syringes_combobox.get())
         label_reagent_name = tk.Label(self.reagents_tab, text=f"Reagent name", font=("Helvetica", 12), bg='#e0dcfd')
         label_syringe_in = tk.Label(self.reagents_tab, text=f"Syringe", font=("Helvetica", 12), bg='#e0dcfd')
@@ -180,39 +142,37 @@ class ExperimentApp(tk.Tk):
             entry_reagent_name.grid(row=i+3, column=1)
             entry_syringe_in.grid(row=i+3, column=2)
             entry_conc.grid(row=i+3, column=3)
+    
+    def add_rows(self):
+        num_entries = int(self.num_syringes_combobox.get())
+        self.num_rows += 1  
+        for i in range(num_entries+1):
+            new_change_entry = tk.Entry(self.experiment_tab, font=("Helvetica", 12), width=7)
+            new_change_entry.grid(row=self.num_rows, column=i)
+        
 
-        save_button = tk.Button(self.reagents_tab, text="Save reagents", command=self.save_reagents, bg = '#c7bffb', fg = 'black', font = ("Helvetica", 12))
-        save_button.grid(row=num_rows+4, columnspan=3)
+    def save_CSTR(self):
+        workbook = openpyxl.Workbook()
+        worksheet = workbook.active
 
-    def save_reagents(self):
+        worksheet.title = "CSTR"
+        data = {'CSTR volume': [float(self.cstr_volume_entry.get())*1000]}
+        for key, value in data.items():
+            worksheet.append([key, *value])
+
         num_reagents = int(self.num_reagents_combobox.get())
-        num_add = int(self.num_add_reagents_combobox.get())
-        filename = self.exp_name_entry.get() + '.xlsx'
-        workbook = openpyxl.load_workbook(filename)
         worksheet = workbook.create_sheet("reagents")
         headers = ["Reagent Name", "Syringe", "Concentration (mM)"]
         worksheet.append(headers)
-        for i in range(num_reagents + num_add):
+        for i in range(num_reagents):
             reagent_name = self.reagents_tab.grid_slaves(row=i+3, column=1)[0].get()
             syringe_in = self.reagents_tab.grid_slaves(row=i+3, column=2)[0].get()
             concentration = float(self.reagents_tab.grid_slaves(row=i+3, column=3)[0].get())
             row_data = [reagent_name, syringe_in, concentration]
             worksheet.append(row_data)
-        workbook.save(filename)
 
-    def add_rows(self):
-        num_entries = int(self.num_syringes_combobox.get())
-        self.num_rows += 1  
-        for i in range(num_entries+1):
-            new_change_entry = tk.Entry(self.experiment_tab, font=("Helvetica", 12))
-            new_change_entry.grid(row=self.num_rows, column=i)
-        
-    
-    def save_changes(self):
-        num_entries = int(self.num_syringes_combobox.get())
-        filename = self.exp_name_entry.get() + '.xlsx'
-        workbook = openpyxl.load_workbook(filename)
         worksheet = workbook.create_sheet("experiment")
+        num_entries = int(self.num_syringes_combobox.get())
         headers = ["Time (min)"]
         for i in range(num_entries):
             headers.append(f"Syringe {i+1}")
@@ -228,8 +188,10 @@ class ExperimentApp(tk.Tk):
             worksheet.append(row_data)
         worksheet.cell(row=self.num_rows, column=1, value="Total time (min)")
         worksheet.cell(row=self.num_rows, column=2, value=float(self.total_time_entry.get()))
+
+        filename = self.exp_name_entry.get() + '.xlsx'
         workbook.save(filename)
-   
+
     def calc(self):
         filename = self.exp_name_entry.get() + '.xlsx'
         filename_2 = self.exp_name_entry.get() + '.xlsx'
@@ -237,5 +199,5 @@ class ExperimentApp(tk.Tk):
             calculations_CSTR(filename, filename_2)
             messagebox.showinfo("Success", "Calculation is complete.")
         except Exception:
-            messagebox.showerror("Error", "An error occurred. Check that you filled all the boxes correctly.")
+            messagebox.showerror("Error", "An error occurred.")
 

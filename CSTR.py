@@ -1,4 +1,4 @@
-from GIU_CSTR import ExperimentApp
+from GUI_CSTR import ExperimentApp
 
 app = ExperimentApp()
 app.mainloop()
